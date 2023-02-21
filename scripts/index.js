@@ -183,4 +183,49 @@ form.addEventListener('submit', (event) => {
 });
 
 
+//____________________________
+const popupFormPhoto = document.querySelector('.popup_open-photo .popup__form');
+const inputNamePhoto = popupFormPhoto.querySelector('#name__photo');
+const inputDescriptionPhoto = popupFormPhoto.querySelector('#description__photo');
+const submitButtonPhoto = popupFormPhoto.querySelector('#submit__photo');
 
+function checkInputValidity(input) {
+   const errorElement = input.nextElementSibling;
+   if (!input.validity.valid) {
+      errorElement.textContent = input.validationMessage;
+      errorElement.classList.add('popup__error_active');
+   } else {
+      errorElement.textContent = '';
+      errorElement.classList.remove('popup__error_active');
+   }
+}
+
+function toggleButtonState(button, isActive) {
+   if (isActive) {
+      button.classList.remove('popup__send-btn_inactive');
+      button.disabled = false;
+   } else {
+      button.classList.add('popup__send-btn_inactive');
+      button.disabled = true;
+   }
+}
+
+function setEventListeners(form) {
+   const inputs = form.querySelectorAll('.popup__profile');
+   inputs.forEach((input) => {
+      input.addEventListener('input', () => {
+         checkInputValidity(input);
+         toggleButtonState(submitButtonPhoto, form.checkValidity());
+      });
+   });
+   form.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+   });
+}
+
+function enableValidation(form) {
+   setEventListeners(form);
+   toggleButtonState(submitButtonPhoto, form.checkValidity());
+}
+
+enableValidation(popupFormPhoto);
