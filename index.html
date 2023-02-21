@@ -60,8 +60,8 @@
          <h2 class="popup__head"> Новое место</h2>
          <form name="popup__form-photo" class="popup__form popup__form_photo" novalidate>
             <label for="">
-               <input id="name__photo" name="name" type="text" class="popup__profile popup__profile_add_description"
-                  required placeholder="Название">
+               <input id="name__photo" name="name" type="text" minlength="2" maxlength="30"
+                  class="popup__profile popup__profile_add_description" required placeholder="Название">
                <span class="popup__error" id="profile_photo_name-error"></span>
                <label for="">
                   <input id="description__photo" name="description" type="url"
