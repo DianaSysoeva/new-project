@@ -48,6 +48,7 @@ profileForm.addEventListener('submit', handleProfileSubmit);
 
 
 
+
 // --------------------------------------Добавление данных для формирования карочки---
 
 const popUpPhoto = document.querySelector('.popup_open-photo');
@@ -133,5 +134,53 @@ function setImagePopupPhoto(photoValue, nameValue) {
    popupPhotoElement.alt = nameValue;
    popupPhotoDescription.textContent = nameValue;
 }
+
+
+
+const form = document.querySelector('.popup__form');
+const nameInput = form.querySelector('#name');
+const descriptionInput = form.querySelector('#description');
+const submitBtn = form.querySelector('#submit');
+
+const validateInput = (input, min, max) => {
+   const errorMessage =
+      input.parentNode.querySelector('.popup__error');
+   if (input.validity.valueMissing) {
+      errorMessage.textContent = 'Это обязательное поле';
+      return false;
+   }
+   if (input.validity.tooShort) {
+      errorMessage.textContent = `Минимальное количество символов: ${min}`;
+      return false;
+   }
+   if (input.validity.tooLong) {
+      errorMessage.textContent = `Максимальное количество символов:
+${max}`;
+      return false;
+   }
+   errorMessage.textContent = '';
+   return true;
+};
+const toggleSubmitBtnState = () => {
+   if (nameInput.validity.valid && descriptionInput.validity.valid) {
+      submitBtn.disabled = false;
+      submitBtn.classList.add('popup__send-btn_active');
+   } else {
+      submitBtn.disabled = true;
+      submitBtn.classList.remove('popup__send-btn_active');
+   }
+};
+nameInput.addEventListener('input', () => {
+   validateInput(nameInput, 2, 40);
+   toggleSubmitBtnState();
+});
+descriptionInput.addEventListener('input', () => {
+   validateInput(descriptionInput, 2, 200);
+   toggleSubmitBtnState();
+});
+form.addEventListener('submit', (event) => {
+   event.preventDefault();
+});
+
 
 
