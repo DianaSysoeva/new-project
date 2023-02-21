@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Mesto</title>
+   <link rel="stylesheet" href="./pages/index.css">
+</head>
+
+<body class="page">
+
+   <header class="header">
+      <img class="header__logo" src="./images/logo.svg" alt="Логотип">
+   </header>
+   <section class="profile">
+      <img class="profile__image" src="./images/avatar.jpg" alt="Аватар">
+      <div class="profile__profile-info">
+         <h1 class="profile__name">Жак-Ив Кусто</h1>
+         <button class="profile__edit-bnt" type="button">
+         </button>
+         <p class="profile__description">Исследователь океана</p>
+      </div>
+      <button class="profile__add-btn" type="button">
+      </button>
+   </section>
+   <section class="elements">
+   </section>
+   <footer class="footer">
+      <p class="footer__author">© 2020 Mesto Russia</p>
+   </footer>
+
+   <div class="popup popup_open-profile">
+      <div class="popup__container">
+         <button type="button" class="popup__close-btn"></button>
+         <h2 class="popup__head">Редактировать профиль</h2>
+         <form name="popup__form-profile" class="popup__form">
+            <input id="name" name="name" type="text" class="popup__profile popup__profile_edit_name" required
+               placeholder="Имя" minlength="2" maxlength="30">
+               <span class="popup__error" id="profile_about-error"></span>
+            <input id="description" name="description" type="text"
+               class="popup__profile popup__profile_edit_description" required placeholder="Статус" minlength="2" maxlength="30">
+               <span class="popup__error" id="profile_about-error"></span>
+            <button type="submit" id="submit" class="popup__send-btn">Сохранить</button>
+         </form>
+      </div>
+   </div>
+
+   <div class="popup popup_open-photo">
+      <div class="popup__container">
+         <button type="button" class="popup__close-btn"></button>
+         <h2 class="popup__head"> Новое место</h2>
+         <form name="popup__form-photo" class="popup__form popup__form_photo">
+            <input id="name__photo" name="name" type="text" class="popup__profile popup__profile_add_description"
+               required placeholder="Название">
+            <input id="description__photo" name="description" type="url" class="popup__profile popup__profile_add_photo"
+               required placeholder="Ссылка на картинку">
+            <button type="submit" id="submit__photo" class="popup__send-btn">Создать</button>
+         </form>
+      </div>
+   </div>
+
+   <div class="popup popup_mod-dark">
+      <div class="increase-img">
+         <button type="button" class="popup__close-btn"></button>
+         <img class="increase-img__photo-view" alt="Фотограия места" src="#">
+         <h2 class="increase-img__name-view"></h2>
+      </div>
+   </div>
+
+   <template id="element">
+      <div class="element">
+         <button type="button" class="element__trash"></button>
+         <img class="element__photo" alt="Фотография места" src="#">
+         <h2 class="element__city"></h2>
+         <button type="button" class="element__heart"></button>
+      </div>
+   </template>
+
+   <script src="./scripts/index.js"></script>
+</body>
+
+
+</html>
