@@ -135,97 +135,87 @@ function setImagePopupPhoto(photoValue, nameValue) {
    popupPhotoDescription.textContent = nameValue;
 }
 
+//__________________________________________
 
+//Проверка полей на валидацию
 
-const form = document.querySelector('.popup__form');
-const nameInput = form.querySelector('#name');
-const descriptionInput = form.querySelector('#description');
-const submitBtn = form.querySelector('#submit');
-
-const validateInput = (input, min, max) => {
-   const errorMessage =
-      input.parentNode.querySelector('.popup__error');
-   if (input.validity.valueMissing) {
-      errorMessage.textContent = 'Это обязательное поле';
-      return false;
-   }
-   if (input.validity.tooShort) {
-      errorMessage.textContent = `Минимальное количество символов: ${min}`;
-      return false;
-   }
-   if (input.validity.tooLong) {
-      errorMessage.textContent = `Максимальное количество символов:
-${max}`;
-      return false;
-   }
-   errorMessage.textContent = '';
-   return true;
-};
-const toggleSubmitBtnState = () => {
-   if (nameInput.validity.valid && descriptionInput.validity.valid) {
-      submitBtn.disabled = false;
-      submitBtn.classList.add('popup__send-btn_active');
-   } else {
-      submitBtn.disabled = true;
-      submitBtn.classList.remove('popup__send-btn_active');
-   }
-};
-nameInput.addEventListener('input', () => {
-   validateInput(nameInput, 2, 40);
-   toggleSubmitBtnState();
-});
-descriptionInput.addEventListener('input', () => {
-   validateInput(descriptionInput, 2, 200);
-   toggleSubmitBtnState();
-});
-form.addEventListener('submit', (event) => {
-   event.preventDefault();
-});
-
-
-//____________________________
-const popupFormPhoto = document.querySelector('.popup_open-photo .popup__form');
-const inputNamePhoto = popupFormPhoto.querySelector('#name__photo');
-const inputDescriptionPhoto = popupFormPhoto.querySelector('#description__photo');
-const submitButtonPhoto = popupFormPhoto.querySelector('#submit__photo');
-
-function checkInputValidity(input) {
+const checkInputValidity = (input) => {
    const errorElement = input.nextElementSibling;
-   if (!input.validity.valid) {
-      errorElement.textContent = input.validationMessage;
-      errorElement.classList.add('popup__error_active');
-   } else {
-      errorElement.textContent = '';
-      errorElement.classList.remove('popup__error_active');
-   }
+   errorElement.textContent = input.validationMessage;
+   errorElement.classList.toggle('popup__error_active', !input.validity.valid);
 }
 
-function toggleButtonState(button, isActive) {
-   if (isActive) {
-      button.classList.remove('popup__send-btn_inactive');
-      button.disabled = false;
-   } else {
-      button.classList.add('popup__send-btn_inactive');
-      button.disabled = true;
-   }
-}
+//переключение кнопки 
+const toggleButtonState = (button, isActive, settings) => {
+   button.disabled = !isActive;
+   button.classList.toggle(settings.inactiveButtonClass, !isActive);
+};
 
-function setEventListeners(form) {
-   const inputs = form.querySelectorAll('.popup__profile');
-   inputs.forEach((input) => {
-      input.addEventListener('input', () => {
-         checkInputValidity(input);
-         toggleButtonState(submitButtonPhoto, form.checkValidity());
-      });
+
+//_________________________________________
+
+const setEventListeners = (form, buttonSelector, settings) => {
+   form.addEventListener('input', (event) => {
+      checkInputValidity(event.target, settings);
+      toggleButtonState(form.querySelector(buttonSelector), form.checkValidity(), settings);
    });
    form.addEventListener('submit', (evt) => {
       evt.preventDefault();
    });
+};
+
+//валидация всех форм
+
+const enableValidation = (settings) => {
+   const defaultSettings = {
+      formSelector: '.popup__form',
+      inputSelector: '.popup__profile',
+      submitButtonSelector: '.popup__send-btn',
+      inactiveButtonClass: 'popup__send-btn_inactive',
+      inputErrorClass: 'popup__error',
+      errorClass: 'popup__error_active'
+   };
+
+   const finalSettings = {};
+   for (let prop in defaultSettings) {
+      finalSettings[prop] = settings[prop] || defaultSettings[prop];
+   }
+
+   const forms = document.querySelectorAll(finalSettings.formSelector);
+   forms.forEach((form) => {
+      setEventListeners(form, finalSettings.submitButtonSelector, finalSettings);
+      toggleButtonState(form.querySelector(finalSettings.submitButtonSelector), form.checkValidity(), finalSettings);
+   });
+};
+
+enableValidation({
+   formSelector: '.popup__form',
+   inputSelector: '.popup__profile',
+   submitButtonSelector: '.popup__send-btn',
+   inactiveButtonClass: 'popup__send-btn_inactive',
+   inputErrorClass: 'popup__error',
+   errorClass: 'popup__error_active'
+});
+
+
+// Функция для закрытия попапов при нажатии ESC
+function closePopupByEscKey(event) {
+   const popup = document.querySelector('.popup_opened');
+   if (event.key === 'Escape' && popup) {
+      closePopup(popup);
+   }
 }
 
-function enableValidation(form) {
-   setEventListeners(form);
-   toggleButtonState(submitButtonPhoto, form.checkValidity());
+// Функция для закрытия попапов при клике на пустой области экрана
+function closePopupByOverlayClick(event) {
+   const popup = document.querySelector('.popup_opened');
+   if (event.target === popup) {
+      closePopup(popup);
+   }
 }
 
-enableValidation(popupFormPhoto);
+// Добавляем обработчики событий на весь документ
+document.addEventListener('keydown', closePopupByEscKey);
+document.addEventListener('click', closePopupByOverlayClick);
+
+
